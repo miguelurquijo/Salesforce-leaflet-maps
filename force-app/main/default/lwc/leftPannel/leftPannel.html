@@ -1,0 +1,154 @@
+<template>
+  <lightning-card class="info" title="Map" icon-name="standard:address">
+    <lightning-button variant="brand"
+       label="Change Status"
+       slot="actions"
+       title="Change Status of the Selected Properties"
+       onclick={openModal}
+       class="slds-m-left_x-small, slds-m-right_x-small">
+    </lightning-button>
+
+    <template if:true={value}>
+        <template if:true={value.pin}>
+            <lightning-button
+            key={acc}
+            slot="actions"
+            label="Back"
+            title="Successful action"
+            onclick={handleClick}
+            class="slds-m-right_x-small"
+          ></lightning-button>
+        </template>   
+        
+        <template if:true={value.mapData}>
+            <lightning-button
+            key={acc}
+            slot="actions"
+            label="Back"
+            title="Successful action"
+            onclick={handleClick}
+            class="slds-m-right_x-small"
+          ></lightning-button>
+        </template>       
+    </template>
+
+    <!-- lightning Modal -->
+    <template if:true={isModalOpen}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Select the new status</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    
+                    <template if:true={value}>
+                        <template if:true={value.pin}>
+                            <lightning-combobox
+                            name="progress"
+                            label="Status"
+                            value={value.pin.Status}
+                            placeholder="Select Status"
+                            options={options}
+                            onchange={handleChangeSelect}></lightning-combobox>
+                        </template>
+                    </template>
+
+                    <template if:true={value}>
+                        <template if:false={value.pin}>
+                            <template if:false={value.mapData}>
+                                <template if:true={value.data}>
+                                    <lightning-combobox
+                                    name="progress"
+                                    label="Status"
+                                    placeholder="Select Status"
+                                    options={options}
+                                    onchange={handleChangeSelectAllData}>
+                                    </lightning-combobox>
+                                </template>
+                            </template>
+                        </template>
+                    </template>
+
+                    <template if:true={value}>
+                        <template if:false={value.pin}>
+                            <template if:true={value.mapData}>
+                                <lightning-combobox
+                                name="progress"
+                                label="Status"
+                                placeholder="Select Status"
+                                options={options}
+                                onchange={handleChangeSelectAllData} ></lightning-combobox>
+                            </template>
+                        </template>
+                    </template>
+
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">OK</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+    <!--Modal end here-->
+
+    <div class="slds-m-around_medium">
+        <template if:true={value}>
+            <template if:true={value.pin}>
+                <div key={value.pin.Id} class="slds-border_bottom">
+                    <div key={value.pin.Id} class="slds-p-around_medium lgc-bg">
+                        <input type="checkbox" value={value.pin.Id} name="authorize" required="required"></input>
+                        <label for="terms" style="display: inline; margin-left: 10px;font-size: 15px;" class="slds-form-element__label"><a onclick={onClickLink} arget="_blank" href={value.pin.Id}>{value.pin.Name}</a> </label>
+                        <p style="font-size: 11px; margin-left: 23px; margin-top: 7px;">{value.pin.Status}</p>
+                    </div>
+                    <p slot="footer"></p>
+                </div>
+            </template>
+        </template>
+        
+        <template if:true={value}>
+            <template if:false={value.pin}>
+                <template if:false={value.mapData}>
+                    <template if:true={value.data}>
+                        <template for:each={value.data} for:item="acc">
+                            <div key={acc.Id} class="slds-border_bottom">
+                                <div key={acc.Id} class="slds-p-around_medium lgc-bg">
+                                    <input class="first-class" type="checkbox" value={acc.Id} name="authorize" onchange={handleCheckBoxChange} required="required"></input>
+                                    <label for="terms" style="display: inline; margin-left: 10px;font-size: 15px;" class="slds-form-element__label"><a onclick={onClickLink} arget="_blank" href={acc.Id}>{acc.Name}</a> </label>
+                                    <p style="font-size: 11px; margin-left: 23px; margin-top: 7px;">{acc.Status}</p>
+                                </div>
+                                <p slot="footer"></p>
+                            </div>
+                          </template>
+                      </template>
+                </template>
+            </template>
+        </template>
+        
+        <template if:true={value}>
+            <template if:false={value.pin}>
+                <template if:true={value.mapData}>
+                    <template for:each={value.mapData} for:item="acc">
+                        <div key={acc.Id} class="slds-border_bottom">
+                            <div key={acc.Id} class="slds-p-around_medium lgc-bg">
+                                <input class="first-class" type="checkbox" value={acc.Id} name="authorize" onchange={handleCheckBoxChange} required="required"></input>
+                                <label for="terms" style="display: inline; margin-left: 10px;font-size: 15px;" class="slds-form-element__label"><a onclick={onClickLink} arget="_blank" href={acc.Id}>{acc.Name}</a> </label>
+                                <p style="font-size: 11px; margin-left: 23px; margin-top: 7px;">{acc.Status}</p>
+                            </div>
+                            <p slot="footer"></p>
+                        </div>
+                      </template>
+                  </template>
+            </template>
+        </template>
+    </div>
+  </lightning-card>
+</template>

@@ -1,0 +1,176 @@
+<aura:component controller="memberTasksV2Controller" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+	<aura:handler name="init" value="this" action="{!c.doInit}" />
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    
+    <aura:attribute name="taskData" type="Object" />
+    <aura:attribute name="member" type="CampaignMember" />
+    <aura:attribute name="taskColumns" type="List" />
+    <aura:attribute name="draftValues" type="Object[]" />
+    <aura:attribute name="recordIdd" type="string" />
+    <aura:attribute name="selectedRecordId" type="Id" />
+    
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="isEditModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="fields"
+                    type="String[]"
+                    default="['asignee_user__c', 'Task_name__c', 'Due_Date__c', 'Investment_Campaign__c', 'Contact__c']"/>
+       
+     <lightning:card>
+         
+         <!--Header-->
+         <article class="slds-card"> 
+          <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+              <div class="slds-media__body">
+                <h2 class="slds-card__header-title">
+                  <a class="slds-card__header-link slds-truncate" title="MemberTasks">
+                    <span>Member Tasks</span>
+                  </a>
+                </h2>
+              </div>
+                
+               <!--Add a task button and modal-->
+              <div class="slds-no-flex">
+                
+                  <div class="slds-m-top_none">
+                   <lightning:button variant="brand"
+                          label="New task"
+                          title="New task"
+                          onclick="{! c.openModel }" />
+ 
+        <!--Use aura:if tag to display/hide popup based on isModalOpen value-->  
+        <aura:if isTrue="{!v.isModalOpen}">
+    
+             
+            <!-- Modal/Popup Box starts here-->
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box Header Starts here-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Add New Task</h2>
+                    </header>
+                    <!--Modal/Popup Box Body Starts here-->
+             
+					<lightning:card>
+                    <lightning:recordEditForm objectApiName="MemberTask__c" onsuccess="{!c.handleSuccess}">
+						  <lightning:messages />
+                          <!--
+                          aura:id="addTasksForm"                         
+                          objectApiName="MemberTask__c"
+                          fields="{!v.fields}"
+                          columns="1"
+                          mode="edit"
+                          onsuccess="{!c.handleSuccess}"/>
+                          -->
+                        
+                        <div style="margin-left:10px; margin-right:10px; ">
+                        <lightning:inputField fieldName="asignee_user__c" />
+                        <lightning:inputField fieldName="Task_name__c" />
+                        <lightning:inputField fieldName="Due_Date__c" />
+                        <lightning:inputField fieldName="Investment_Campaign__c" value="{!v.member.CampaignId}" />
+                        <lightning:inputField fieldName="Contact__c" value="{!v.member.ContactId}" /> 
+                            <!-- value="{!v.recordId}" -->
+                        </div>
+                        
+                         <div style="text-align:center !important; ">
+                            <lightning:button variant="brand" type="submit" name="save" label="Save" />
+                            <lightning:button name="cancel" label="Cancel" onclick="{! c.closeModel }" />
+                        </div>
+                        
+                        </lightning:recordEditForm>
+                        
+                    </lightning:card>
+                    
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        
+                    </div>
+                    <!--Modal/Popup Box Footer Starts here-->
+                    <!--
+                    <footer class="slds-modal__footer">
+                        <lightning:button variant="neutral"
+                                          label="Close"
+                                          title="Close"
+                                          onclick="{! c.closeModel }"/>
+                        
+                                          lightning:button variant="brand"
+                                          label="OK"
+                                          title="OK"
+                                          onclick="{!c.submitDetails}"/
+                                  
+
+                    </footer>
+					-->
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+        <aura:if isTrue="{!v.isEditModalOpen}">
+    
+             
+            <!-- Modal/Popup Box starts here-->
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box Header Starts here-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeEditModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Edit Task</h2>
+                    </header>
+                    <!--Modal/Popup Box Body Starts here-->
+             
+					<lightning:card>
+                    <lightning:recordEditForm recordId="{!v.selectedRecordId}" objectApiName="MemberTask__c" onsuccess="{!c.handleSuccess}">
+						  <lightning:messages />
+                        <div style="margin-left:10px; margin-right:10px; ">
+                        	<lightning:inputField fieldName="asignee_user__c" />
+                        	<lightning:inputField fieldName="Task_name__c" />
+                        	<lightning:inputField fieldName="Due_Date__c" />
+                            <lightning:inputField fieldName="Task_status__c" />
+							<lightning:inputField fieldName="Investment_Campaign__c" />
+                        	<lightning:inputField fieldName="Contact__c" />
+                        	
+                        </div>
+                        
+                         <div style="text-align:center !important; ">
+                            <lightning:button variant="brand" type="submit" name="save" label="Save" />
+                            <lightning:button name="cancel" label="Cancel" onclick="{! c.closeEditModel }" />
+                        </div>
+                        
+                        </lightning:recordEditForm>
+                        
+                    </lightning:card>
+                    
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        
+                    </div>
+                    
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+                      
+    </div>
+                  
+              </div>
+            </header>
+          </div>
+         </article>
+         
+         
+         <!--div class="slds-text-heading_medium">Member Tasks</div-->
+		 <!--c:addTaskModal/-->              
+         
+         <!--tasks datatable-->
+        <lightning:datatable keyField="Id" data="{!v.taskData}" columns="{!v.taskColumns}" draftValues="{!v.draftValues}" onsave="{!c.saveEdition}" hideCheckboxColumn="true" onrowaction="{!c.handleRowAction}" />
+    
+    </lightning:card>
+            
+</aura:component>

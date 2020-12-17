@@ -1,0 +1,9 @@
+.my-super-class {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  position: relative;
+  height: 600px;
+  z-index: 1;
+}

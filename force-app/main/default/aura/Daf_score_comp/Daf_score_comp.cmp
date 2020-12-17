@@ -1,0 +1,16 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+   <div>
+    	<div class="slds-grid slds-gutters">
+            <div class="slds-col slds-align_absolute-center slds-box">
+                <div class="slds-p-around_x-small"><span>1</span></div>
+                
+            </div>
+            <div class="slds-col slds-align_absolute-center slds-box">
+                <div class="slds-p-around_x-small"><span>2</span></div>
+            </div>
+            <div class="slds-col slds-align_absolute-center slds-box">
+                <div class="slds-p-around_x-small"><span>3</span></div>
+            </div>
+		</div>
+    </div>
+</aura:component>

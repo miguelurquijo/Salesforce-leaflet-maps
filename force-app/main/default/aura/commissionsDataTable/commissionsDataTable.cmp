@@ -1,0 +1,45 @@
+<aura:component controller="CommissionDataTableController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,force:hasSObjectName" access="global" >
+    
+    <aura:handler name="init" value="this" action="{!c.doInit}" />
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    
+	<aura:attribute name="closingData" type="Object" />
+    <aura:attribute name="closingColumns" type="List" />
+    <aura:attribute name="openingData" type="Object" />
+    <aura:attribute name="openingColumns" type="List" />
+    <aura:attribute name="performanceData" type="Object" />
+    <aura:attribute name="performanceColumns" type="List" />
+    <aura:attribute name="totalClosingData" type="List" />
+    <aura:attribute name="totalClosingColumns" type="List" />
+    <aura:attribute name="totalOpeningData" type="List" />
+    <aura:attribute name="totalOpeningColumns" type="List" />
+    <aura:attribute name="totalPerformanceData" type="List" />
+    <aura:attribute name="totalPerformanceColumns" type="List" />
+    <aura:attribute name="SummaryData" type="Object" />
+    <aura:attribute name="SummaryColumns" type="List" />
+    <aura:attribute name="draftValues" type="Object[]" />
+    
+    <lightning:card>        
+        <div class="slds-text-heading_medium">Closing Commissions</div>
+        <lightning:datatable keyField="Id" data="{!v.closingData}" columns="{!v.closingColumns}" draftValues="{!v.draftValues}" onsave="{!c.saveEdition}" hideCheckboxColumn="true" />
+        <div class="slds-text-heading_small">Total Commissions</div>
+        <lightning:datatable keyField="id" data="{!v.totalClosingData}" columns="{!v.totalClosingColumns}" hideCheckboxColumn="true" />
+    </lightning:card>
+    <lightning:card>
+        <div class="slds-text-heading_medium">Opening Commissions</div>
+        <lightning:datatable keyField="Id" data="{!v.openingData}" columns="{!v.openingColumns}" draftValues="{!v.draftValues}" onsave="{!c.saveEdition}" hideCheckboxColumn="true" />
+        <div class="slds-text-heading_small">Total Commissions</div>
+        <lightning:datatable keyField="id" data="{!v.totalOpeningData}" columns="{!v.totalOpeningColumns}" hideCheckboxColumn="true" />
+    </lightning:card>
+    <lightning:card>
+        <div class="slds-text-heading_medium">Performance Commissions</div>
+        <lightning:datatable keyField="Id" data="{!v.performanceData}" columns="{!v.performanceColumns}" draftValues="{!v.draftValues}" onsave="{!c.saveEdition}" hideCheckboxColumn="true" />
+        <div class="slds-text-heading_small">Total Commissions</div>
+        <lightning:datatable keyField="id" data="{!v.totalPerformanceData}" columns="{!v.totalPerformanceColumns}" hideCheckboxColumn="true" />
+    </lightning:card>
+    <lightning:card>        
+        <div class="slds-text-heading_medium">Summary Total Commissions</div>
+        <lightning:datatable keyField="Id" data="{!v.SummaryData}" columns="{!v.SummaryColumns}" hideCheckboxColumn="true" />
+    </lightning:card> 
+    
+</aura:component>
